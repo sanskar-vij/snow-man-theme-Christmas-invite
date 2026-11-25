@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #050b18;
+    color: #fff8eb;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lora', Georgia, serif;
+    background-color: #050b18;
+    overflow-x: hidden;
+  }
+}
+
+.font-script {
+  font-family: 'Great Vibes', cursive;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.font-garamond {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-lora {
+  font-family: 'Lora', Georgia, serif;
+}
+
+/* Sculpted embossed gold effect matching the carved wood signage */
+.gold-text-carved {
+  background: linear-gradient(
+    180deg,
+    #fff6d1 0%,
+    #f6d379 32%,
+    #dca13b 68%,
+    #f9e19c 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 1px rgba(28, 13, 3, 0.92))
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.72));
+}
+
+/* Luminous starry gold calligraphy for midnight blue closing scene — high contrast & crisp visibility */
+.gold-text-midnight {
+  color: #fff6d8;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.98),
+    0 4px 14px rgba(0, 0, 0, 0.95),
+    0 0 22px rgba(246, 206, 109, 0.6);
+}
+
+/* Warm sepia-black ink printed onto aged parchment */
+.parchment-ink {
+  color: #24140a;
+  text-shadow: 0 1px 0 rgba(255, 244, 222, 0.45);
+}
+
+/* Subtle dark-wood carved cream text */
+.wood-cream-text {
+  color: #fff5e1;
+  text-shadow: 0 1px 3px rgba(22, 9, 2, 0.95), 0 0 10px rgba(0, 0, 0, 0.55);
+}
+
+/* Gentle warm lantern pulse and candle flame flicker */
+@keyframes lampGlowPulse {
+  0%, 100% {
+    transform: scale(0.94);
+    opacity: 0.65;
+    filter: brightness(0.92);
+  }
+  25% {
+    transform: scale(1.06);
+    opacity: 0.94;
+    filter: brightness(1.18);
+  }
+  45% {
+    transform: scale(0.97);
+    opacity: 0.72;
+    filter: brightness(0.96);
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+    filter: brightness(1.24);
+  }
+  85% {
+    transform: scale(1.02);
+    opacity: 0.85;
+    filter: brightness(1.08);
+  }
+}
+
+.animate-lantern {
+  animation: lampGlowPulse 2.8s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+}
+
+/* Subtle golden shimmer pulse for CTA buttons */
+@keyframes shimmerGlow {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(246, 200, 95, 0.35), inset 0 1px 1px rgba(255, 250, 230, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(246, 200, 95, 0.6), inset 0 1px 2px rgba(255, 250, 230, 0.75);
+  }
+}
+
+.animate-gold-glow {
+  animation: shimmerGlow 3.2s ease-in-out infinite;
+}
+
+/* Gentle bounce for scroll cue */
+@keyframes gentleBob {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.animate-bob {
+  animation: gentleBob 2.4s ease-in-out infinite;
+}
+
+/* Smooth fade-up reveal */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* --- Fairy light bulbs: gentle alternating twinkle --- */
+@keyframes fairyTwinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.fairy-bulb {
+  animation: fairyTwinkle 2.4s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+/* --- Twinkling starlight dots --- */
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+.animate-star-twinkle {
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+/* --- Warm hanging bauble shimmer --- */
+@keyframes baubleSwing {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.animate-bauble-swing {
+  animation: baubleSwing 4.5s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* --- Subtle Ken Burns drift on storybook artwork --- */
+@keyframes kenBurns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.06) translate(-0.6%, -0.8%); }
+}
+.animate-ken-burns {
+  animation: kenBurns 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* --- Santa's sleigh crossing the midnight sky --- */
+@keyframes sleighFlyby {
+  0% { transform: translateX(-30%) translateY(6%); opacity: 0; }
+  8% { opacity: 1; }
+  50% { transform: translateX(38%) translateY(-14%); opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translateX(112%) translateY(-26%); opacity: 0; }
+}
+.sleigh-flyby {
+  animation: sleighFlyby 26s linear infinite;
+  will-change: transform, opacity;
+}
+
+/* Rudolph's glowing red nose */
+@keyframes noseGlow {
+  0%, 100% { filter: drop-shadow(0 0 1px #ff5252); opacity: 0.85; }
+  50% { filter: drop-shadow(0 0 4px #ff8a80); opacity: 1; }
+}
+.rudolph-nose {
+  animation: noseGlow 1.6s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-gold-glow,
+  .animate-bob,
+  .fairy-bulb,
+  .animate-star-twinkle,
+  .animate-bauble-swing,
+  .animate-ken-burns,
+  .sleigh-flyby,
+  .rudolph-nose {
+    animation: none !important;
+  }
+}
+
+/* Custom thin subtle scrollbars */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
