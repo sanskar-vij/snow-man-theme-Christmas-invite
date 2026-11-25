@@ -23,7 +23,7 @@ export function HeroCover({
       className="relative aspect-[9/16] w-full overflow-hidden [container-type:inline-size]"
     >
       <img
-        src="/images/hero-snowman.jpg"
+        src="/images/hero-snowman.webp"
         alt="Cheerful snowman leaning over a festive wooden Christmas Party sign in a snowy winter village"
         className="h-full w-full object-cover select-none"
       />

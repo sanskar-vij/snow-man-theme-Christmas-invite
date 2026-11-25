@@ -25,7 +25,7 @@ export function DetailsScroll({
       className="relative aspect-[9/16] w-full overflow-hidden [container-type:inline-size]"
     >
       <img
-        src="/images/details-scroll-bg.jpg"
+        src="/images/details-scroll-bg.webp"
         alt="Festive aged parchment scroll framed by holly pine boughs, glowing lanterns, and a carved wooden Christmas tree"
         className="h-full w-full object-cover select-none"
       />

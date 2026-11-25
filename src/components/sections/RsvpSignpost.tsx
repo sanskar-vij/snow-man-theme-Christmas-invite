@@ -26,7 +26,7 @@ export function RsvpSignpost({
       className="relative aspect-[9/16] w-full overflow-hidden [container-type:inline-size]"
     >
       <img
-        src="/images/rsvp-signpost.jpg"
+        src="/images/rsvp-signpost.webp"
         alt="Three-tier snow-dusted wooden RSVP signpost with a red velvet Santa hat and cheerful snowman peeking around the side"
         className="h-full w-full object-cover select-none"
       />

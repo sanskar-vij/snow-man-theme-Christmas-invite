@@ -41,7 +41,7 @@ export function EntryGate({ onEnter }: EntryGateProps) {
     >
       {/* Festive storybook backdrop with deep navy vignette for legible gold text */}
       <img
-        src="/images/hero-snowman.jpg"
+        src="/images/hero-snowman.webp"
         alt=""
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover opacity-40"

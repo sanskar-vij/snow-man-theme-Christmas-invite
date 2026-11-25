@@ -25,10 +25,10 @@ export function ClosingVillage({
         loop
         muted
         playsInline
-        poster="/images/closing-village.jpg"
+        poster="/images/closing-village.webp"
         className="h-full w-full object-cover select-none pointer-events-none"
       >
-        <source src="/videos/closing-village.mp4" type="video/mp4" />
+        <source src="/videos/closing-village.webm" type="video/webm" />
       </video>
 
       {/* Soft atmospheric top transition */}
