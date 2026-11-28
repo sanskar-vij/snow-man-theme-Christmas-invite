@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import { LAMP_LIGHT_CONFIGS, LampLightMode } from '../utils/lampLight';
+import { LAMP_LIGHT_CONFIGS, LAMP_LIGHT_MODES, LampLightMode } from '../utils/lampLight';
 import { cn } from '../utils/cn';
 
 interface InteractiveLampProps {
-  mode: LampLightMode;
-  onToggle: () => void;
+  initialMode?: LampLightMode;
+  lampName?: string;
+  onModeChange?: (mode: LampLightMode, message: string) => void;
   className?: string;
   label?: string;
   pulseAnimation?: boolean;
@@ -13,20 +14,26 @@ interface InteractiveLampProps {
 }
 
 export function InteractiveLamp({
-  mode,
-  onToggle,
+  initialMode = 'warm',
+  lampName = 'Lamp',
+  onModeChange,
   className = '',
-  label = 'Tap to change light on all lamps',
+  label = 'Tap to change this lamp light',
   pulseAnimation = true,
   showHint = false,
 }: InteractiveLampProps) {
+  const [mode, setMode] = useState<LampLightMode>(initialMode);
   const [burstKey, setBurstKey] = useState(0);
   const config = LAMP_LIGHT_CONFIGS[mode];
   const isOff = mode === 'off';
 
   const handleClick = () => {
+    const nextIndex = (LAMP_LIGHT_MODES.indexOf(mode) + 1) % LAMP_LIGHT_MODES.length;
+    const nextMode = LAMP_LIGHT_MODES[nextIndex];
+    const nextConfig = LAMP_LIGHT_CONFIGS[nextMode];
+    setMode(nextMode);
     setBurstKey((k) => k + 1);
-    onToggle();
+    onModeChange?.(nextMode, `${nextConfig.emoji} ${lampName}: ${nextConfig.name}`);
   };
 
   return (

@@ -28,6 +28,24 @@ const HOLIDAY_TREATS = [
   'Vegetarian Platter',
 ];
 
+const CONFETTI_PIECES = [
+  { tx: '-115px', ty: '-72px', rot: '-220deg', delay: '0ms', color: '#c42428', shape: 'rect' },
+  { tx: '-88px', ty: '-95px', rot: '190deg', delay: '40ms', color: '#f4c653', shape: 'circle' },
+  { tx: '-62px', ty: '-110px', rot: '-160deg', delay: '80ms', color: '#1d6b3d', shape: 'rect' },
+  { tx: '-34px', ty: '-120px', rot: '260deg', delay: '20ms', color: '#fff3c4', shape: 'star' },
+  { tx: '-12px', ty: '-126px', rot: '-240deg', delay: '60ms', color: '#d9383a', shape: 'circle' },
+  { tx: '14px', ty: '-124px', rot: '210deg', delay: '30ms', color: '#f7d060', shape: 'rect' },
+  { tx: '42px', ty: '-114px', rot: '-190deg', delay: '70ms', color: '#247a47', shape: 'star' },
+  { tx: '68px', ty: '-104px', rot: '250deg', delay: '15ms', color: '#c42428', shape: 'circle' },
+  { tx: '96px', ty: '-86px', rot: '-210deg', delay: '50ms', color: '#f4c653', shape: 'rect' },
+  { tx: '120px', ty: '-64px', rot: '180deg', delay: '90ms', color: '#fff3c4', shape: 'circle' },
+  { tx: '-102px', ty: '-44px', rot: '310deg', delay: '110ms', color: '#247a47', shape: 'circle' },
+  { tx: '-48px', ty: '-78px', rot: '-280deg', delay: '100ms', color: '#f7d060', shape: 'star' },
+  { tx: '0px', ty: '-92px', rot: '320deg', delay: '120ms', color: '#d9383a', shape: 'rect' },
+  { tx: '52px', ty: '-76px', rot: '-260deg', delay: '95ms', color: '#fff3c4', shape: 'rect' },
+  { tx: '105px', ty: '-42px', rot: '290deg', delay: '115ms', color: '#1d6b3d', shape: 'star' },
+] as const;
+
 export const RsvpModal: React.FC<RsvpModalProps> = ({
   isOpen,
   onClose,
@@ -36,6 +54,8 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
   onShowToast,
 }) => {
   const [isEditing, setIsEditing] = useState(!savedRsvp);
+  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [submitCount, setSubmitCount] = useState(0);
   const [name, setName] = useState(savedRsvp?.name || '');
   const [attending, setAttending] = useState<'yes' | 'no'>(savedRsvp?.attending || 'yes');
   const [guests, setGuests] = useState(savedRsvp?.guests || 2);
@@ -44,6 +64,11 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
+
+  const handleClose = () => {
+    setJustSubmitted(false);
+    onClose();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +90,8 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
       }),
     };
     onSaveRsvp(submission);
+    setJustSubmitted(true);
+    setSubmitCount((c) => c + 1);
     setIsEditing(false);
     onShowToast(
       attending === 'yes'
@@ -80,7 +107,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
       aria-modal="true"
       aria-labelledby="rsvp-modal-title"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
       <div className="relative w-full max-w-[430px] max-h-[92dvh] overflow-y-auto rounded-t-[28px] sm:rounded-[28px] border border-[#e8c26d]/45 bg-gradient-to-b from-[#f9ebd0] via-[#f4dfb7] to-[#e9cca0] text-[#28160b] shadow-[0_-10px_45px_rgba(0,0,0,0.75)] animate-fade-up">
@@ -97,7 +124,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close RSVP sheet"
             className="flex h-8 w-8 items-center justify-center rounded-full bg-[#3a200e]/10 text-[#3a200e] transition hover:bg-[#3a200e]/20 active:scale-95"
           >
@@ -107,12 +134,56 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
 
         <div className="px-5 py-5">
           {!isEditing && savedRsvp ? (
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#d49a3a] bg-gradient-to-br from-[#9e1d20] to-[#6a1014] text-[#fff2c6] shadow-lg">
-                <Check className="h-7 w-7" strokeWidth={2.5} />
+            <div key={`confirm-${submitCount}`} className="relative space-y-4 text-center">
+              {/* Confetti burst when RSVP is newly sent */}
+              {justSubmitted && (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-8 z-20 h-0 w-0"
+                >
+                  {CONFETTI_PIECES.map((piece, idx) => (
+                    <span
+                      key={idx}
+                      className="animate-rsvp-confetti absolute left-0 top-0"
+                      style={
+                        {
+                          '--tx': piece.tx,
+                          '--ty': piece.ty,
+                          '--rot': piece.rot,
+                          animationDelay: piece.delay,
+                          width: piece.shape === 'rect' ? '7px' : '8px',
+                          height: piece.shape === 'rect' ? '11px' : '8px',
+                          borderRadius: piece.shape === 'circle' ? '9999px' : '2px',
+                          backgroundColor: piece.color,
+                          boxShadow: `0 0 6px ${piece.color}`,
+                        } as React.CSSProperties
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Celebratory Wax Seal Checkmark */}
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center">
+                {justSubmitted && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 rounded-full border-2 border-[#e2a93b] animate-lamp-burst"
+                  />
+                )}
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#d49a3a] bg-gradient-to-br from-[#9e1d20] to-[#6a1014] text-[#fff2c6] shadow-lg ${
+                    justSubmitted ? 'animate-rsvp-seal' : ''
+                  }`}
+                >
+                  <Check className="h-7 w-7" strokeWidth={2.5} />
+                </div>
               </div>
 
-              <div>
+              <div
+                className={justSubmitted ? 'animate-fade-up' : ''}
+                style={justSubmitted ? { animationDelay: '120ms' } : undefined}
+              >
                 <p className="font-script text-4xl text-[#8d1d1f]">
                   {savedRsvp.attending === 'yes' ? 'You’re on the List!' : 'Warmest Wishes!'}
                 </p>
@@ -123,10 +194,26 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
                 </p>
               </div>
 
-              <SnowflakeDivider color="#6e4720" />
+              <div
+                className={justSubmitted ? 'animate-fade-up' : ''}
+                style={justSubmitted ? { animationDelay: '220ms' } : undefined}
+              >
+                <SnowflakeDivider color="#6e4720" />
+              </div>
 
-              {/* Golden Keepsake Guest Pass */}
-              <div className="rounded-2xl border border-[#b48136]/45 bg-[#fff8ea]/80 p-4 text-left shadow-inner">
+              {/* Golden Keepsake Guest Pass with diagonal shimmer sweep */}
+              <div
+                className={`relative overflow-hidden rounded-2xl border border-[#b48136]/45 bg-[#fff8ea]/80 p-4 text-left shadow-inner ${
+                  justSubmitted ? 'animate-fade-up' : ''
+                }`}
+                style={justSubmitted ? { animationDelay: '300ms' } : undefined}
+              >
+                {justSubmitted && (
+                  <span
+                    aria-hidden="true"
+                    className="animate-pass-sheen pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#fffdf2]/80 to-transparent"
+                  />
+                )}
                 <div className="flex items-center justify-between border-b border-[#b48136]/25 pb-2.5">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b5c25]">
@@ -151,7 +238,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
 
                 <div className="mt-3 space-y-1.5 text-xs text-[#4b2d18]">
                   <p>
-                    <span className="font-semibold">Event:</span> Saturday, December 20, 2025 • 7:00 PM
+                    <span className="font-semibold">Event:</span> Sunday, December 20, 2026 • 7:00 PM
                   </p>
                   <p>
                     <span className="font-semibold">Venue:</span> The Grand Hall, 123 Celebration Way, NY
@@ -169,7 +256,10 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2.5 pt-1">
+              <div
+                className={`flex flex-col gap-2.5 pt-1 ${justSubmitted ? 'animate-fade-up' : ''}`}
+                style={justSubmitted ? { animationDelay: '400ms' } : undefined}
+              >
                 {savedRsvp.attending === 'yes' && (
                   <button
                     type="button"
@@ -186,7 +276,10 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    setJustSubmitted(false);
+                    setIsEditing(true);
+                  }}
                   className="w-full rounded-xl border border-[#7c5324]/40 bg-transparent px-4 py-2.5 text-xs font-semibold tracking-wider text-[#5a3518] uppercase transition hover:bg-[#7c5324]/10"
                 >
                   Update My Response
@@ -198,7 +291,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({
               <div className="text-center">
                 <p className="font-garamond text-lg italic leading-snug text-[#3d2110]">
                   Kindly confirm your presence by{' '}
-                  <span className="font-semibold not-italic text-[#8d1d1f]">December 15, 2025</span>
+                  <span className="font-semibold not-italic text-[#8d1d1f]">December 15, 2026</span>
                 </p>
               </div>
 

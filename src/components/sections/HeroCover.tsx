@@ -5,19 +5,17 @@ import { InteractiveLamp } from '../InteractiveLamp';
 import { AmbientSparkles } from '../AmbientSparkles';
 import { FestiveTapZone } from '../FestiveTapZone';
 import { useInView } from '../../hooks/useInView';
-import type { LampLightMode } from '../../utils/lampLight';
 
 interface HeroCoverProps {
   onScrollToDetails: () => void;
-  lampLight: LampLightMode;
-  onToggleLamp: () => void;
   showLampHint?: boolean;
+  onLampChange: (message: string) => void;
   onShowToast: (msg: string) => void;
 }
 
 const SNOWMAN_WISHES = [
   '⛄ Ho ho ho! Glad you are invited!',
-  '❄️ Tap any lamp to change the festive glow!',
+  '❄️ Tap any lamp to customize its festive glow!',
   '🎄 See you at The Grand Hall!',
 ];
 
@@ -26,15 +24,18 @@ const SNOWMAN_WISHES = [
  */
 export function HeroCover({
   onScrollToDetails,
-  lampLight,
-  onToggleLamp,
   showLampHint = false,
+  onLampChange,
   onShowToast,
 }: HeroCoverProps) {
   const { ref, isVisible } = useInView<HTMLElement>(0.15);
   const [wishIndex, setWishIndex] = useState(0);
+  const [bounceKey, setBounceKey] = useState(0);
+  const [isBouncing, setIsBouncing] = useState(false);
 
   const handleSnowmanTap = () => {
+    setBounceKey((k) => k + 1);
+    setIsBouncing(true);
     onShowToast(SNOWMAN_WISHES[wishIndex % SNOWMAN_WISHES.length]);
     setWishIndex((i) => i + 1);
   };
@@ -53,6 +54,50 @@ export function HeroCover({
         className="h-full w-full object-cover select-none"
       />
 
+      {/* Animated breathing & bouncing Snowman overlay (soft-masked to head, hat, scarf & mittens) */}
+      <div
+        key={isBouncing ? `bounce-${bounceKey}` : 'breathe'}
+        aria-hidden="true"
+        onAnimationEnd={() => {
+          if (isBouncing) setIsBouncing(false);
+        }}
+        className={`pointer-events-none absolute inset-0 ${
+          isBouncing ? 'animate-snowman-bounce' : 'animate-snowman-breathe'
+        }`}
+        style={{
+          transformOrigin: '48% 46%',
+          maskImage:
+            'radial-gradient(17% 13% at 47% 28%, #000 62%, transparent 94%), radial-gradient(25% 9% at 48% 41%, #000 58%, transparent 94%)',
+          WebkitMaskImage:
+            'radial-gradient(17% 13% at 47% 28%, #000 62%, transparent 94%), radial-gradient(25% 9% at 48% 41%, #000 58%, transparent 94%)',
+        }}
+      >
+        <img
+          src="/images/hero-snowman.webp"
+          alt=""
+          className="h-full w-full object-cover select-none"
+        />
+      </div>
+
+      {/* Pulsing rosy-cheek warmth on the smiling snowman */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[38.4%] top-[33.7%] w-[6.5%] aspect-square rounded-full animate-cheek-blush"
+        style={{
+          background: 'radial-gradient(circle, rgba(255, 115, 115, 0.55) 0%, transparent 70%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[52.5%] top-[33.0%] w-[6.5%] aspect-square rounded-full animate-cheek-blush"
+        style={{
+          background: 'radial-gradient(circle, rgba(255, 115, 115, 0.55) 0%, transparent 70%)',
+          mixBlendMode: 'screen',
+          animationDelay: '0.4s',
+        }}
+      />
+
       {/* Warm cozy window glow on the background snowy cottage */}
       <div
         aria-hidden="true"
@@ -65,7 +110,7 @@ export function HeroCover({
       />
 
       {/* Ambient twinkling holiday sparkles */}
-      <AmbientSparkles mode={lampLight} />
+      <AmbientSparkles />
 
       {/* Interactive Snowman tap zone */}
       <FestiveTapZone
@@ -77,30 +122,29 @@ export function HeroCover({
 
       {/* Interactive Hanging Brass Street Lamp (top-left) */}
       <InteractiveLamp
-        mode={lampLight}
-        onToggle={onToggleLamp}
+        lampName="Street Lamp"
+        onModeChange={(_mode, msg) => onLampChange(msg)}
         showHint={showLampHint}
         className="left-[22.8%] top-[19.8%] w-[24%] aspect-square -translate-x-1/2 -translate-y-1/2"
-        label="Tap hanging street lamp to change lights"
+        label="Tap hanging street lamp to change its light"
       />
 
       {/* Interactive Standing Brass Lantern (bottom-right) */}
       <InteractiveLamp
-        mode={lampLight}
-        onToggle={onToggleLamp}
+        lampName="Snow Lantern"
+        onModeChange={(_mode, msg) => onLampChange(msg)}
         className="left-[78.2%] top-[89.2%] w-[21%] aspect-square -translate-x-1/2 -translate-y-1/2"
-        label="Tap snow lantern to change lights"
+        label="Tap snow lantern to change its light"
       />
 
       {/* Twinkling fairy light strand across the snowy night sky */}
       <FairyLights
         count={13}
-        mode={lampLight}
         className="absolute top-[2.5%] left-[6%] right-[6%] h-[4.5%] opacity-90"
       />
 
       {/* Carved Wooden Board Typography Overlay */}
-      <div className="absolute top-[47%] left-[10%] right-[10%] flex h-[24.5%] flex-col items-center justify-center px-[2cqw] text-center">
+      <div className="absolute top-[47%] left-[8%] right-[8%] flex h-[24.5%] flex-col items-center justify-center px-[3cqw] text-center">
         <p
           className="reveal-item font-garamond text-[4.6cqw] font-semibold tracking-[0.03em] wood-cream-text"
           style={{ transitionDelay: '80ms' }}
@@ -108,7 +152,7 @@ export function HeroCover({
           You’re Invited to our
         </p>
         <h1
-          className="reveal-item animate-gold-shimmer font-script -mt-[0.5cqw] text-[17.5cqw] leading-[0.86] gold-text-carved select-text"
+          className="reveal-item animate-gold-shimmer font-script px-[3cqw] mt-[0.2cqw] text-[16.5cqw] leading-[0.98] gold-text-carved select-text"
           style={{ transitionDelay: '200ms' }}
         >
           Christmas

@@ -35,18 +35,12 @@
 
 /* Sculpted embossed gold effect matching the carved wood signage */
 .gold-text-carved {
-  background: linear-gradient(
-    180deg,
-    #fff6d1 0%,
-    #f6d379 32%,
-    #dca13b 68%,
-    #f9e19c 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 1px rgba(28, 13, 3, 0.92))
-    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.72));
+  color: #ffe294;
+  text-shadow:
+    0 1px 0 rgba(255, 249, 224, 0.45),
+    0 2px 3px rgba(24, 10, 2, 0.96),
+    0 4px 12px rgba(0, 0, 0, 0.82),
+    0 0 16px rgba(246, 200, 92, 0.32);
 }
 
 /* Luminous starry gold calligraphy for midnight blue closing scene — high contrast & crisp visibility */
@@ -146,7 +140,7 @@
 }
 
 .animate-fade-up {
-  animation: fadeInUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fadeInUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Scroll-triggered staggered reveal */
@@ -218,10 +212,10 @@
 /* Subtle golden shimmer pulse on carved & calligraphic titles */
 @keyframes goldShimmerPulse {
   0%, 100% {
-    filter: drop-shadow(0 2px 2px rgba(20, 10, 2, 0.9)) drop-shadow(0 0 8px rgba(246, 206, 109, 0.2));
+    filter: brightness(0.98) drop-shadow(0 0 6px rgba(246, 206, 109, 0.18));
   }
   50% {
-    filter: drop-shadow(0 2px 2px rgba(20, 10, 2, 0.9)) drop-shadow(0 0 18px rgba(255, 224, 130, 0.55));
+    filter: brightness(1.08) drop-shadow(0 0 14px rgba(255, 224, 130, 0.45));
   }
 }
 
@@ -283,6 +277,354 @@
 
 .animate-gentle-ping {
   animation: gentlePing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Gentle idle breathing on the snowmen (scale >= 1 prevents revealing static edges behind) */
+@keyframes snowmanBreathe {
+  0%, 100% {
+    transform: scale(1, 1) translateY(0px);
+  }
+  50% {
+    transform: scale(1.022, 1.034) translateY(-1.5px);
+  }
+}
+
+.animate-snowman-breathe {
+  animation: snowmanBreathe 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Joyful squash-and-stretch bounce when tapping the snowman */
+@keyframes snowmanBounce {
+  0% {
+    transform: scale(1, 1);
+  }
+  30% {
+    transform: scale(1.055, 1.075) translateY(-3px);
+  }
+  60% {
+    transform: scale(1.01, 1.015) translateY(0px);
+  }
+  80% {
+    transform: scale(1.035, 1.045) translateY(-1.5px);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.animate-snowman-bounce {
+  animation: snowmanBounce 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform;
+}
+
+/* Soft pulsing rosy-cheek warmth on the snowmen */
+@keyframes cheekBlush {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+.animate-cheek-blush {
+  animation: cheekBlush 2.8s ease-in-out infinite;
+}
+
+/* Gentle idle breeze sway on the Santa hat */
+@keyframes santaHatSway {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(1.6deg) scale(1.028);
+  }
+}
+
+.animate-santa-hat-sway {
+  animation: santaHatSway 3.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Playful pendulum swing when tapping the Santa hat */
+@keyframes santaHatSwing {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  20% {
+    transform: rotate(7deg) scale(1.06);
+  }
+  45% {
+    transform: rotate(-5deg) scale(1.045);
+  }
+  68% {
+    transform: rotate(3.5deg) scale(1.03);
+  }
+  85% {
+    transform: rotate(-1.5deg) scale(1.015);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.animate-santa-hat-swing {
+  animation: santaHatSwing 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform;
+}
+
+/* Celebratory RSVP wax-seal spring pop */
+@keyframes rsvpSealPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35) rotate(-18deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.18) rotate(6deg);
+  }
+  78% {
+    transform: scale(0.95) rotate(-3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-rsvp-seal {
+  animation: rsvpSealPop 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Festive confetti burst particles when RSVP is sent */
+@keyframes rsvpConfetti {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) rotate(0deg) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tx, 0px) * 0.55), var(--ty, -60px)) rotate(calc(var(--rot, 180deg) * 0.45)) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tx, 0px)), calc(var(--ty, -60px) + 120px)) rotate(var(--rot, 360deg)) scale(0.75);
+  }
+}
+
+.animate-rsvp-confetti {
+  animation: rsvpConfetti 1.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Diagonal golden sheen sweep across the RSVP keepsake pass */
+@keyframes passSheen {
+  0% {
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(240%) skewX(-20deg);
+  }
+}
+
+.animate-pass-sheen {
+  animation: passSheen 1.2s ease-in-out 0.35s forwards;
+}
+
+/* Anticipation squeeze & pop when tapping the real gift box */
+@keyframes giftStagePop {
+  0% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(0.97, 1.02);
+  }
+  48% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.03);
+  }
+}
+
+.animate-gift-stage-pop {
+  animation: giftStagePop 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Radiant golden light beam shooting upward from the opened gift */
+@keyframes giftMagicBeam {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 15%) scaleX(0.35) scaleY(0.1);
+  }
+  35% {
+    opacity: 0.92;
+    transform: translate(-50%, -18%) scaleX(1) scaleY(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -35%) scaleX(1.65) scaleY(1.35);
+  }
+}
+
+.animate-gift-beam {
+  animation: giftMagicBeam 1.25s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  transform-origin: bottom center;
+}
+
+/* Expanding starburst flare from inside the open box */
+@keyframes giftLightFlare {
+  0% {
+    transform: translate(-50%, -50%) scale(0.15);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+.animate-gift-flare {
+  animation: giftLightFlare 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+}
+
+/* Particle fountain erupting from the open gift box */
+@keyframes giftFountain {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) rotate(0deg) scale(0.4);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tx, 0px) * 0.45), calc(var(--ty, -120px) * 0.65)) rotate(calc(var(--rot, 180deg) * 0.4)) scale(1.2);
+  }
+  70% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tx, 0px)), calc(var(--ty, -120px) + 95px)) rotate(var(--rot, 360deg)) scale(0.7);
+  }
+}
+
+.animate-gift-fountain {
+  animation: giftFountain 1.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Live satin shimmer gliding across the gold gift ribbon */
+@keyframes ribbonSheen {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(220%) skewX(-22deg);
+    opacity: 0;
+  }
+}
+
+.animate-ribbon-sheen {
+  animation: ribbonSheen 3.6s ease-in-out infinite;
+}
+
+/* Soft twinkling bokeh on the snowy trees behind the gift */
+@keyframes bokehTwinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+.animate-bokeh-twinkle {
+  animation: bokehTwinkle 3.2s ease-in-out infinite;
+}
+
+/* Left & right vertical ribbons peeling open when tapped */
+@keyframes ribbonPeelLeft {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-32px, 38px) rotate(-16deg) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes ribbonPeelRight {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(32px, 38px) rotate(16deg) scale(0.95);
+    opacity: 0;
+  }
+}
+
+.animate-ribbon-peel-left {
+  animation: ribbonPeelLeft 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-ribbon-peel-right {
+  animation: ribbonPeelRight 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Satin bow untying upward when tapped */
+@keyframes bowUntie {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: translateY(-14px) scale(1.12, 0.94);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-64px) scale(1.24, 0.85);
+    opacity: 0;
+  }
+}
+
+.animate-bow-untie {
+  animation: bowUntie 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Crimson velvet lid lifting up & tilting open */
+@keyframes lidLiftOpen {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-70px) rotate(-9deg) scale(1.04);
+    opacity: 0;
+  }
+}
+
+.animate-lid-lift {
+  animation: lidLiftOpen 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.16s forwards;
 }
 
 /* --- Fairy light bulbs: gentle alternating twinkle --- */
@@ -364,4 +706,21 @@
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
+}
+
+/* Crystalline snowflake cursor activated only after entering via the gift */
+body.snowflake-cursor-active,
+body.snowflake-cursor-active * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 32 32'%3E%3Cg stroke='%2307142b' stroke-width='3.8' stroke-linecap='round' fill='none' opacity='0.78'%3E%3Cline x1='16' y1='2' x2='16' y2='30'/%3E%3Cline x1='3.9' y1='9' x2='28.1' y2='23'/%3E%3Cline x1='3.9' y1='23' x2='28.1' y2='9'/%3E%3Cpath d='M13 6 L16 9 L19 6 M13 26 L16 23 L19 26 M6.5 13 L10 12.5 L9.5 9 M25.5 19 L22 19.5 L22.5 23 M9.5 23 L10 19.5 L6.5 19 M22.5 9 L22 12.5 L25.5 13'/%3E%3C/g%3E%3Cg stroke='%23f0f8ff' stroke-width='1.8' stroke-linecap='round' fill='none'%3E%3Cline x1='16' y1='2' x2='16' y2='30'/%3E%3Cline x1='3.9' y1='9' x2='28.1' y2='23'/%3E%3Cline x1='3.9' y1='23' x2='28.1' y2='9'/%3E%3Cpath d='M13 6 L16 9 L19 6 M13 26 L16 23 L19 26 M6.5 13 L10 12.5 L9.5 9 M25.5 19 L22 19.5 L22.5 23 M9.5 23 L10 19.5 L6.5 19 M22.5 9 L22 12.5 L25.5 13'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='2.1' fill='%23ffffff' stroke='%239dd6ff' stroke-width='0.9'/%3E%3C/svg%3E") 14 14, auto !important;
+}
+
+body.snowflake-cursor-active a,
+body.snowflake-cursor-active a *,
+body.snowflake-cursor-active button,
+body.snowflake-cursor-active button *,
+body.snowflake-cursor-active [role='button'],
+body.snowflake-cursor-active [role='button'] *,
+body.snowflake-cursor-active label,
+body.snowflake-cursor-active select {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 32 32'%3E%3Cg stroke='%2307142b' stroke-width='3.8' stroke-linecap='round' fill='none' opacity='0.82'%3E%3Cline x1='16' y1='2' x2='16' y2='30'/%3E%3Cline x1='3.9' y1='9' x2='28.1' y2='23'/%3E%3Cline x1='3.9' y1='23' x2='28.1' y2='9'/%3E%3Cpath d='M13 6 L16 9 L19 6 M13 26 L16 23 L19 26 M6.5 13 L10 12.5 L9.5 9 M25.5 19 L22 19.5 L22.5 23 M9.5 23 L10 19.5 L6.5 19 M22.5 9 L22 12.5 L25.5 13'/%3E%3C/g%3E%3Cg stroke='%23ffe69a' stroke-width='1.9' stroke-linecap='round' fill='none'%3E%3Cline x1='16' y1='2' x2='16' y2='30'/%3E%3Cline x1='3.9' y1='9' x2='28.1' y2='23'/%3E%3Cline x1='3.9' y1='23' x2='28.1' y2='9'/%3E%3Cpath d='M13 6 L16 9 L19 6 M13 26 L16 23 L19 26 M6.5 13 L10 12.5 L9.5 9 M25.5 19 L22 19.5 L22.5 23 M9.5 23 L10 19.5 L6.5 19 M22.5 9 L22 12.5 L25.5 13'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23fff8db' stroke='%23d89e3c' stroke-width='0.9'/%3E%3C/svg%3E") 14 14, pointer !important;
 }

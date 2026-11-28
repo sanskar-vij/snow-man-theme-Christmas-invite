@@ -38,7 +38,7 @@ export function TopBar({
         ) : (
           <>
             <Sparkles className="h-3 w-3 text-[#f5ce70]" />
-            <span>Dec 20, 2025</span>
+            <span>Dec 20, 2026</span>
           </>
         )}
       </button>

@@ -3,11 +3,9 @@ import { GoldCalligraphyFlourish, SnowflakeDivider } from '../OrnamentDividers';
 import { InteractiveLamp } from '../InteractiveLamp';
 import { FestiveTapZone } from '../FestiveTapZone';
 import { useInView } from '../../hooks/useInView';
-import type { LampLightMode } from '../../utils/lampLight';
 
 interface ClosingVillageProps {
-  lampLight: LampLightMode;
-  onToggleLamp: () => void;
+  onLampChange: (message: string) => void;
   onShowToast: (msg: string) => void;
 }
 
@@ -15,8 +13,7 @@ interface ClosingVillageProps {
  * SCENE 4 — Closing Village: midnight snowy village with golden calligraphic cheer.
  */
 export function ClosingVillage({
-  lampLight,
-  onToggleLamp,
+  onLampChange,
   onShowToast,
 }: ClosingVillageProps) {
   const { ref, isVisible } = useInView<HTMLElement>(0.15);
@@ -49,10 +46,10 @@ export function ClosingVillage({
 
       {/* Interactive Snow Lantern on the lower-left */}
       <InteractiveLamp
-        mode={lampLight}
-        onToggle={onToggleLamp}
+        lampName="Village Lantern"
+        onModeChange={(_mode, msg) => onLampChange(msg)}
         className="left-[13.8%] top-[86%] w-[24%] aspect-square -translate-x-1/2 -translate-y-1/2"
-        label="Tap snow lantern to change lights"
+        label="Tap village snow lantern to change its light"
       />
 
       {/* Interactive illuminated Christmas tree in the village */}
@@ -79,7 +76,7 @@ export function ClosingVillage({
         </p>
 
         <p
-          className="reveal-item font-script -mt-[0.6cqw] text-[13.8cqw] leading-[0.92] gold-text-midnight select-text"
+          className="reveal-item font-script px-[2cqw] mt-[0.2cqw] text-[11.2cqw] leading-[1.06] gold-text-midnight select-text"
           style={{ transitionDelay: '220ms' }}
         >
           Christmas cheer together!

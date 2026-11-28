@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Check, Mail, Phone, Sparkles } from 'lucide-react';
 import { SnowflakeDivider } from '../OrnamentDividers';
 import { InteractiveLamp } from '../InteractiveLamp';
@@ -5,13 +6,11 @@ import { AmbientSparkles } from '../AmbientSparkles';
 import { FestiveTapZone } from '../FestiveTapZone';
 import { useInView } from '../../hooks/useInView';
 import type { RsvpSubmission } from '../RsvpModal';
-import type { LampLightMode } from '../../utils/lampLight';
 
 interface RsvpSignpostProps {
   savedRsvp: RsvpSubmission | null;
   onOpenRsvp: () => void;
-  lampLight: LampLightMode;
-  onToggleLamp: () => void;
+  onLampChange: (message: string) => void;
   onShowToast: (msg: string) => void;
 }
 
@@ -29,11 +28,26 @@ const RSVP_SPARKLES = [
 export function RsvpSignpost({
   savedRsvp,
   onOpenRsvp,
-  lampLight,
-  onToggleLamp,
+  onLampChange,
   onShowToast,
 }: RsvpSignpostProps) {
   const { ref, isVisible } = useInView<HTMLElement>(0.2);
+  const [snowmanBounceKey, setSnowmanBounceKey] = useState(0);
+  const [isSnowmanBouncing, setIsSnowmanBouncing] = useState(false);
+  const [santaHatKey, setSantaHatKey] = useState(0);
+  const [isHatSwinging, setIsHatSwinging] = useState(false);
+
+  const handleSnowmanTap = () => {
+    setSnowmanBounceKey((k) => k + 1);
+    setIsSnowmanBouncing(true);
+    onShowToast('⛄ Confirm your RSVP below — we cannot wait!');
+  };
+
+  const handleSantaHatTap = () => {
+    setSantaHatKey((k) => k + 1);
+    setIsHatSwinging(true);
+    onShowToast("🎅 Ho ho ho! Santa's hat is ready for the party!");
+  };
 
   return (
     <section
@@ -49,6 +63,71 @@ export function RsvpSignpost({
         className="h-full w-full object-cover select-none"
       />
 
+      {/* Animated swaying & tap-swinging Santa hat overlay */}
+      <div
+        key={isHatSwinging ? `hat-${santaHatKey}` : 'hat-sway'}
+        aria-hidden="true"
+        onAnimationEnd={() => {
+          if (isHatSwinging) setIsHatSwinging(false);
+        }}
+        className={`pointer-events-none absolute inset-0 ${
+          isHatSwinging ? 'animate-santa-hat-swing' : 'animate-santa-hat-sway'
+        }`}
+        style={{
+          transformOrigin: '60% 21%',
+          maskImage: 'radial-gradient(21% 14% at 74% 24%, #000 62%, transparent 94%)',
+          WebkitMaskImage: 'radial-gradient(21% 14% at 74% 24%, #000 62%, transparent 94%)',
+        }}
+      >
+        <img
+          src="/images/rsvp-signpost.webp"
+          alt=""
+          className="h-full w-full object-cover select-none"
+        />
+      </div>
+
+      {/* Animated breathing & bouncing peeking Snowman overlay */}
+      <div
+        key={isSnowmanBouncing ? `snow-${snowmanBounceKey}` : 'snow-breathe'}
+        aria-hidden="true"
+        onAnimationEnd={() => {
+          if (isSnowmanBouncing) setIsSnowmanBouncing(false);
+        }}
+        className={`pointer-events-none absolute inset-0 ${
+          isSnowmanBouncing ? 'animate-snowman-bounce' : 'animate-snowman-breathe'
+        }`}
+        style={{
+          transformOrigin: '72% 88%',
+          maskImage: 'radial-gradient(26% 22% at 71% 67%, #000 60%, transparent 94%)',
+          WebkitMaskImage: 'radial-gradient(26% 22% at 71% 67%, #000 60%, transparent 94%)',
+        }}
+      >
+        <img
+          src="/images/rsvp-signpost.webp"
+          alt=""
+          className="h-full w-full object-cover select-none"
+        />
+      </div>
+
+      {/* Pulsing rosy-cheek warmth on the peeking snowman */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[64.2%] top-[58.8%] w-[5.5%] aspect-square rounded-full animate-cheek-blush"
+        style={{
+          background: 'radial-gradient(circle, rgba(255, 115, 115, 0.5) 0%, transparent 70%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[81.7%] top-[64.8%] w-[5.5%] aspect-square rounded-full animate-cheek-blush"
+        style={{
+          background: 'radial-gradient(circle, rgba(255, 115, 115, 0.5) 0%, transparent 70%)',
+          mixBlendMode: 'screen',
+          animationDelay: '0.5s',
+        }}
+      />
+
       {/* Soft atmospheric edge transitions */}
       <div
         aria-hidden="true"
@@ -60,14 +139,14 @@ export function RsvpSignpost({
       />
 
       {/* Ambient twinkling sparkles */}
-      <AmbientSparkles mode={lampLight} points={RSVP_SPARKLES} />
+      <AmbientSparkles points={RSVP_SPARKLES} />
 
       {/* Interactive background pine tree lantern on the left */}
       <InteractiveLamp
-        mode={lampLight}
-        onToggle={onToggleLamp}
+        lampName="Tree Lantern"
+        onModeChange={(_mode, msg) => onLampChange(msg)}
         className="left-[6.5%] top-[50.5%] w-[14%] aspect-square -translate-x-1/2 -translate-y-1/2"
-        label="Tap tree lantern to change lights"
+        label="Tap tree lantern to change its light"
       />
 
       {/* Interactive hanging baubles near the Santa hat */}
@@ -90,9 +169,17 @@ export function RsvpSignpost({
         <div className="h-8 w-8 rounded-full bg-[radial-gradient(circle_at_32%_28%,_#ffb3b3,_#c0282c_45%,_#7d1216_85%)] shadow-[0_0_18px_rgba(220,60,60,0.5)] transition group-hover:scale-110" />
       </FestiveTapZone>
 
+      {/* Interactive Santa hat tap zone */}
+      <FestiveTapZone
+        onTrigger={handleSantaHatTap}
+        emojis={['🎅', '🎄', '✨']}
+        ariaLabel="Tap Santa hat to swing it"
+        className="left-[66%] top-[12%] h-[26%] w-[26%] z-30"
+      />
+
       {/* Interactive peeking snowman on the right */}
       <FestiveTapZone
-        onTrigger={() => onShowToast('⛄ Confirm your RSVP below — we cannot wait!')}
+        onTrigger={handleSnowmanTap}
         emojis={['⛄', '🎁', '❄️']}
         ariaLabel="Tap peeking snowman"
         className="left-[57%] top-[46%] h-[40%] w-[36%] z-20"
@@ -112,7 +199,7 @@ export function RsvpSignpost({
         <p className="font-lora mt-[0.8cqw] text-[2.55cqw] font-medium leading-[1.22] wood-cream-text">
           Kindly confirm your presence
           <br />
-          by December 15, 2025.
+          by December 15, 2026.
         </p>
       </button>
 
@@ -142,7 +229,7 @@ export function RsvpSignpost({
         </a>
 
         <a
-          href="mailto:party@yourmail.com?subject=Christmas%20Party%202025%20RSVP"
+          href="mailto:party@yourmail.com?subject=Christmas%20Party%202026%20RSVP"
           className="flex items-center gap-[2.2cqw] rounded-md px-[2cqw] py-[0.4cqw] transition hover:bg-white/10 active:scale-95"
         >
           <span className="flex h-[4.8cqw] w-[4.8cqw] shrink-0 items-center justify-center rounded-sm bg-[#210f05]/75 text-[#f9de96] ring-1 ring-[#f6d074]/45">

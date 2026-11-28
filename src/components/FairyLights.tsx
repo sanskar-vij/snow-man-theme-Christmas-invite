@@ -13,9 +13,9 @@ interface FairyLightsProps {
  * Festive strand of gently drooping warm fairy lights with twinkling bulbs.
  * Pure SVG + CSS animations — no extra dependencies.
  */
-export function FairyLights({ count = 11, className = '', mode = 'warm' }: FairyLightsProps) {
+export function FairyLights({ count = 11, className = '', mode }: FairyLightsProps) {
   const gradientId = `fairy-wire-${useId().replace(/:/g, '')}`;
-  const bulbColors = LAMP_LIGHT_CONFIGS[mode]?.fairyColors || DEFAULT_BULB_COLORS;
+  const bulbColors = mode ? LAMP_LIGHT_CONFIGS[mode].fairyColors : DEFAULT_BULB_COLORS;
   const isOff = mode === 'off';
 
   const points = Array.from({ length: count }, (_, i) => {
@@ -37,9 +37,8 @@ export function FairyLights({ count = 11, className = '', mode = 'warm' }: Fairy
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none transition-opacity duration-500 ${className} ${
-        isOff ? 'opacity-25' : ''
-      }`}
+      className={`pointer-events-none transition-opacity duration-500 ${className} ${isOff ? 'opacity-25' : ''
+        }`}
     >
       <svg viewBox="-2 -2 104 20" className="h-full w-full overflow-visible" preserveAspectRatio="none">
         <defs>
