@@ -1,6 +1,9 @@
 import { Check, Mail, Phone, Sparkles } from 'lucide-react';
 import { SnowflakeDivider } from '../OrnamentDividers';
 import { InteractiveLamp } from '../InteractiveLamp';
+import { AmbientSparkles } from '../AmbientSparkles';
+import { FestiveTapZone } from '../FestiveTapZone';
+import { useInView } from '../../hooks/useInView';
 import type { RsvpSubmission } from '../RsvpModal';
 import type { LampLightMode } from '../../utils/lampLight';
 
@@ -9,7 +12,16 @@ interface RsvpSignpostProps {
   onOpenRsvp: () => void;
   lampLight: LampLightMode;
   onToggleLamp: () => void;
+  onShowToast: (msg: string) => void;
 }
+
+const RSVP_SPARKLES = [
+  { top: '10%', left: '84%', size: 3.5, delay: '0.4s', duration: '4.2s' },
+  { top: '28%', left: '88%', size: 3, delay: '1.2s', duration: '3.6s' },
+  { top: '64%', left: '12%', size: 3.5, delay: '0.8s', duration: '4.4s' },
+  { top: '82%', left: '42%', size: 3, delay: '1.7s', duration: '3.9s' },
+  { top: '76%', left: '92%', size: 3.5, delay: '2.2s', duration: '4.1s' },
+];
 
 /**
  * SCENE 3 — RSVP Signpost: three-tier rustic wooden sign with Santa hat & snowman.
@@ -19,11 +31,17 @@ export function RsvpSignpost({
   onOpenRsvp,
   lampLight,
   onToggleLamp,
+  onShowToast,
 }: RsvpSignpostProps) {
+  const { ref, isVisible } = useInView<HTMLElement>(0.2);
+
   return (
     <section
+      ref={ref}
       id="rsvp"
-      className="relative aspect-[9/16] w-full overflow-hidden [container-type:inline-size]"
+      className={`relative aspect-[9/16] w-full overflow-hidden [container-type:inline-size] ${
+        isVisible ? 'reveal-visible' : ''
+      }`}
     >
       <img
         src="/images/rsvp-signpost.webp"
@@ -41,6 +59,9 @@ export function RsvpSignpost({
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[12%] bg-gradient-to-t from-[#060f20] via-[#060f20]/35 to-transparent"
       />
 
+      {/* Ambient twinkling sparkles */}
+      <AmbientSparkles mode={lampLight} points={RSVP_SPARKLES} />
+
       {/* Interactive background pine tree lantern on the left */}
       <InteractiveLamp
         mode={lampLight}
@@ -49,24 +70,43 @@ export function RsvpSignpost({
         label="Tap tree lantern to change lights"
       />
 
-      {/* Hanging golden bauble ornament near the Santa hat */}
-      <div className="pointer-events-none absolute top-[5%] left-[12%] animate-bauble-swing">
+      {/* Interactive hanging baubles near the Santa hat */}
+      <FestiveTapZone
+        onTrigger={() => onShowToast('✨ Wishing you golden holiday magic!')}
+        emojis={['✨', '🌟', '🔔']}
+        ariaLabel="Tap golden ornament"
+        className="top-[5%] left-[12%] animate-bauble-swing"
+      >
         <div className="mx-auto h-[38px] w-px bg-[#f4cd6d]/45" />
-        <div className="h-7 w-7 rounded-full bg-[radial-gradient(circle_at_32%_28%,_#fff3c4,_#e3b04b_45%,_#9c6a14_85%)] shadow-[0_0_18px_rgba(240,200,100,0.5)]" />
-      </div>
-      <div className="pointer-events-none absolute top-[3%] right-[14%] animate-bauble-swing" style={{ animationDelay: '1.2s' }}>
+        <div className="h-7 w-7 rounded-full bg-[radial-gradient(circle_at_32%_28%,_#fff3c4,_#e3b04b_45%,_#9c6a14_85%)] shadow-[0_0_18px_rgba(240,200,100,0.5)] transition group-hover:scale-110" />
+      </FestiveTapZone>
+      <FestiveTapZone
+        onTrigger={() => onShowToast('🎄 Spreading festive cheer!')}
+        emojis={['🎄', '❤️', '✨']}
+        ariaLabel="Tap red ornament"
+        className="top-[3%] right-[14%] animate-bauble-swing"
+      >
         <div className="mx-auto h-[46px] w-px bg-[#f4cd6d]/45" />
-        <div className="h-8 w-8 rounded-full bg-[radial-gradient(circle_at_32%_28%,_#ffb3b3,_#c0282c_45%,_#7d1216_85%)] shadow-[0_0_18px_rgba(220,60,60,0.5)]" />
-      </div>
+        <div className="h-8 w-8 rounded-full bg-[radial-gradient(circle_at_32%_28%,_#ffb3b3,_#c0282c_45%,_#7d1216_85%)] shadow-[0_0_18px_rgba(220,60,60,0.5)] transition group-hover:scale-110" />
+      </FestiveTapZone>
+
+      {/* Interactive peeking snowman on the right */}
+      <FestiveTapZone
+        onTrigger={() => onShowToast('⛄ Confirm your RSVP below — we cannot wait!')}
+        emojis={['⛄', '🎁', '❄️']}
+        ariaLabel="Tap peeking snowman"
+        className="left-[57%] top-[46%] h-[40%] w-[36%] z-20"
+      />
 
       {/* PLANK 1 — RSVP Header & Deadline */}
       <button
         type="button"
         onClick={onOpenRsvp}
-        className="group absolute top-[18.8%] left-[15.5%] flex h-[11.2%] w-[56%] flex-col items-center justify-center px-[2.5cqw] text-center transition active:scale-[0.98]"
+        className="reveal-item group absolute top-[18.8%] left-[15.5%] flex h-[11.2%] w-[56%] flex-col items-center justify-center px-[2.5cqw] text-center transition active:scale-[0.98]"
+        style={{ transitionDelay: '80ms' }}
         aria-label="Open RSVP form"
       >
-        <h2 className="font-cinzel text-[6.8cqw] font-extrabold leading-none tracking-[0.16em] gold-text-carved transition group-hover:brightness-110">
+        <h2 className="animate-gold-shimmer font-cinzel text-[6.8cqw] font-extrabold leading-none tracking-[0.16em] gold-text-carved transition group-hover:brightness-110">
           RSVP
         </h2>
         <p className="font-lora mt-[0.8cqw] text-[2.55cqw] font-medium leading-[1.22] wood-cream-text">
@@ -77,12 +117,18 @@ export function RsvpSignpost({
       </button>
 
       {/* Snowflake ornament perched gracefully between Plank 1 & Plank 2 */}
-      <div className="pointer-events-none absolute top-[31.1%] left-[16%] flex w-[56%] justify-center opacity-85">
+      <div
+        className="reveal-item pointer-events-none absolute top-[31.1%] left-[16%] flex w-[56%] justify-center opacity-85"
+        style={{ transitionDelay: '180ms' }}
+      >
         <SnowflakeDivider color="#f8e3b0" className="w-[62%]" />
       </div>
 
       {/* PLANK 2 — Interactive Phone & Email Contact Links */}
-      <div className="absolute top-[34.6%] left-[16%] flex h-[11.2%] w-[61%] flex-col items-center justify-center gap-[1.3cqw] px-[2.5cqw]">
+      <div
+        className="reveal-item absolute top-[34.6%] left-[16%] flex h-[11.2%] w-[61%] flex-col items-center justify-center gap-[1.3cqw] px-[2.5cqw]"
+        style={{ transitionDelay: '280ms' }}
+      >
         <a
           href="tel:+15551234567"
           className="flex items-center gap-[2.2cqw] rounded-md px-[2cqw] py-[0.4cqw] transition hover:bg-white/10 active:scale-95"
@@ -109,7 +155,10 @@ export function RsvpSignpost({
       </div>
 
       {/* PLANK 3 — Warm Closing Note (Left of Snowman) */}
-      <div className="pointer-events-none absolute top-[52.4%] left-[17%] flex h-[10.2%] w-[41.5%] items-center justify-center px-[1.5cqw] text-center">
+      <div
+        className="reveal-item pointer-events-none absolute top-[52.4%] left-[17%] flex h-[10.2%] w-[41.5%] items-center justify-center px-[1.5cqw] text-center"
+        style={{ transitionDelay: '380ms' }}
+      >
         <p className="font-garamond text-[4.1cqw] font-semibold italic leading-[1.12] wood-cream-text">
           We can’t wait to
           <br />
@@ -118,7 +167,10 @@ export function RsvpSignpost({
       </div>
 
       {/* Primary Mobile Interactive RSVP CTA tucked gracefully at foot of scene */}
-      <div className="absolute inset-x-0 bottom-[2.6%] flex justify-center px-5">
+      <div
+        className="reveal-item absolute inset-x-0 bottom-[2.6%] flex justify-center px-5"
+        style={{ transitionDelay: '480ms' }}
+      >
         <button
           type="button"
           onClick={onOpenRsvp}

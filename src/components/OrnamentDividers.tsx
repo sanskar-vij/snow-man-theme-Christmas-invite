@@ -25,7 +25,7 @@ export const SnowflakeDivider: React.FC<DividerProps> = ({
       strokeWidth="1.65"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="shrink-0"
+      className="shrink-0 animate-snowflake-spin"
     >
       <line x1="12" y1="2" x2="12" y2="22" />
       <line x1="2" y1="12" x2="22" y2="12" />

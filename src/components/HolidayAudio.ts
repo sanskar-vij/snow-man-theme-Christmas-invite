@@ -125,6 +125,17 @@ class HolidayMusicBox {
       window.clearTimeout(this.timerId);
       this.timerId = null;
     }
+    if (this.ctx && this.ctx.state === 'running') {
+      void this.ctx.suspend();
+    }
+  }
+
+  public dispose() {
+    this.stop();
+    if (this.ctx) {
+      void this.ctx.close();
+      this.ctx = null;
+    }
   }
 
   public toggle(): boolean {

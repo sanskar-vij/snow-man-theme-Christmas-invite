@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Calendar, Clock, MailOpen, MapPin } from 'lucide-react';
 import { SnowflakeDivider } from './OrnamentDividers';
 import { FairyLights } from './FairyLights';
+import { AmbientSparkles } from './AmbientSparkles';
 
 interface EntryGateProps {
   onEnter: () => void;
@@ -62,6 +63,7 @@ export function EntryGate({ onEnter }: EntryGateProps) {
       {/* Festive fairy light strands across the top of the gate */}
       <FairyLights count={13} className="absolute top-4 left-0 right-0 h-10 opacity-90" />
       <FairyLights count={11} className="absolute top-14 left-0 right-0 h-8 opacity-60 scale-x-[-1]" />
+      <AmbientSparkles />
 
       {/* Hanging Christmas baubles on the left & right edges */}
       <div className="absolute top-24 left-[8%] animate-bauble-swing">

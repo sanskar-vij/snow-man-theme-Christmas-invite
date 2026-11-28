@@ -36,6 +36,7 @@ export function App() {
   const [entered, setEntered] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [lampLight, setLampLight] = useState<LampLightMode>('warm');
+  const [hasTappedLamp, setHasTappedLamp] = useState(false);
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [savedRsvp, setSavedRsvp] = useState<RsvpSubmission | null>(loadSavedRsvp);
@@ -50,8 +51,31 @@ export function App() {
   };
 
   useEffect(() => {
-    return () => {
+    const stopAudio = () => {
       holidayMusicBox.stop();
+      setIsMusicPlaying(false);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopAudio();
+      }
+    };
+
+    const handlePageExit = () => {
+      holidayMusicBox.dispose();
+      setIsMusicPlaying(false);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handlePageExit);
+    window.addEventListener('beforeunload', handlePageExit);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageExit);
+      window.removeEventListener('beforeunload', handlePageExit);
+      holidayMusicBox.dispose();
       if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
     };
   }, []);
@@ -74,6 +98,7 @@ export function App() {
   };
 
   const handleToggleLamp = () => {
+    setHasTappedLamp(true);
     const nextIndex = (LAMP_LIGHT_MODES.indexOf(lampLight) + 1) % LAMP_LIGHT_MODES.length;
     const nextMode = LAMP_LIGHT_MODES[nextIndex];
     setLampLight(nextMode);
@@ -134,6 +159,8 @@ export function App() {
           onScrollToDetails={() => scrollToSection('details')}
           lampLight={lampLight}
           onToggleLamp={handleToggleLamp}
+          showLampHint={!hasTappedLamp}
+          onShowToast={showToast}
         />
         <DetailsScroll
           onShowToast={showToast}
@@ -145,10 +172,12 @@ export function App() {
           onOpenRsvp={() => setIsRsvpOpen(true)}
           lampLight={lampLight}
           onToggleLamp={handleToggleLamp}
+          onShowToast={showToast}
         />
         <ClosingVillage
           lampLight={lampLight}
           onToggleLamp={handleToggleLamp}
+          onShowToast={showToast}
         />
       </main>
 
